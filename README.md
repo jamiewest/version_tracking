@@ -1,4 +1,6 @@
-Xamarin.Essentials VersionTacking for Flutter
+# VersionTacking for Flutter
+
+[![pub package](https://img.shields.io/pub/v/version_tracking.svg)](https://pub.dev/packages/version_tracking)
 
 ## Introduction
 
