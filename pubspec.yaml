@@ -1,6 +1,6 @@
 name: version_tracking
 description: Xamarin.Essentials VersionTracking for Flutter. 
-version: 1.0.0
+version: 1.0.1
 homepage: https://www.github.com/jamiewest/version_tracking
 author: Jamie West <jamiewst@gmail.com>
 
