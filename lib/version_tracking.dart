@@ -6,6 +6,7 @@ import 'package:meta/meta.dart';
 const String _versionsKey = "VersionTracking.Versions";
 const String _buildsKey = "VersionTracking.Builds";
 
+/// Provides an easy way to track an app's version on a device.
 class VersionTracking {
 
   const VersionTracking({
@@ -23,12 +24,12 @@ class VersionTracking {
   });
 
   factory VersionTracking.from({
-    @required SharedPreferences preferences, 
-    @required PackageInfo info}) {
+    @required SharedPreferences sharedPreferences, 
+    @required PackageInfo packageInfo}) {
     
     Map<String, List<String>> versionTrail = Map<String, List<String>>();;
 
-    var isFirstLaunchEver = !preferences.containsKey(_versionsKey) || !preferences.containsKey(_buildsKey);
+    var isFirstLaunchEver = !sharedPreferences.containsKey(_versionsKey) || !sharedPreferences.containsKey(_buildsKey);
     if (isFirstLaunchEver) {
       
       versionTrail.addAll({
@@ -37,13 +38,13 @@ class VersionTracking {
 
     } else {
       versionTrail.addAll({
-        _versionsKey: _readHistory(preferences, _versionsKey).toList(),
-        _buildsKey: _readHistory(preferences, _buildsKey).toList()
+        _versionsKey: _readHistory(sharedPreferences, _versionsKey).toList(),
+        _buildsKey: _readHistory(sharedPreferences, _buildsKey).toList()
       });
     }
 
-    var currentVersion = info.version;
-    var currentBuild = info.buildNumber;
+    var currentVersion = packageInfo.version;
+    var currentBuild = packageInfo.buildNumber;
 
     var isFirstLaunchForCurrentVersion = !versionTrail[_versionsKey].contains(currentVersion);    
     if (isFirstLaunchForCurrentVersion) {
@@ -56,8 +57,8 @@ class VersionTracking {
     }
 
     if (isFirstLaunchForCurrentVersion || isFirstLaunchForCurrentBuild) {
-        _writeHistory(preferences, _versionsKey, versionTrail[_versionsKey]);
-        _writeHistory(preferences, _buildsKey, versionTrail[_buildsKey]);
+        _writeHistory(sharedPreferences, _versionsKey, versionTrail[_versionsKey]);
+        _writeHistory(sharedPreferences, _buildsKey, versionTrail[_buildsKey]);
     }
 
     return VersionTracking(
@@ -75,42 +76,44 @@ class VersionTracking {
     );
   }
 
-  /// First time ever launched application
+  /// Gets a value indicating whether this is the first time this app has ever been launched on this device.
   final bool isFirstLaunchEver;
 
-  /// First time launching current version
+  /// Gets a value indicating if this is the first launch of the app for the current version number.
   final bool isFirstLaunchForCurrentVersion;
 
-  /// First time launching current build
+  /// Gets a value indicating if this is the first launch of the app for the current build number.
   final bool isFirstLaunchForCurrentBuild;
 
-  /// Current app version (2.0.0)
+  /// Gets the current version number of the app.
   final String currentVersion;
 
-  /// Current build (2)
+  /// Gets the current build of the app.
   final String currentBuild;
 
-  /// Previous app version (1.0.0)
+  /// Gets the version number for the previously run version.
   final String previousVersion;
 
-  /// Previous app build (1)
+  /// Gets the build number for the previously run version.
   final String previousBuild;
 
-  /// First version of app installed (1.0.0)
+  /// Gets the version number of the first version of the app that was installed on this device.
   final String firstInstalledVersion;
 
-  /// First build of app installed (1)
+  /// Gets the build number of first version of the app that was installed on this device.
   final String firstInstalledBuild;
 
-  /// List of versions installed (1.0.0, 2.0.0)
+  /// Gets the collection of version numbers of the app that ran on this device.
   final List<String> versionHistory;
 
-  /// List of builds installed (1, 2)
+  /// Gets the collection of build numbers of the app that ran on this device.
   final List<String> buildHistory;
 
+  /// Determines if this is the first launch of the app for a specified version number.
   bool isFirstLaunchForVersion(String version) =>
     currentVersion == version && isFirstLaunchForCurrentVersion;
 
+  /// Determines if this is the first launch of the app for a specified build number.
   bool isFirstLaunchForBuild(String build) =>
     currentBuild == build && isFirstLaunchForCurrentBuild;
 

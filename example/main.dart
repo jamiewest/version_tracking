@@ -9,7 +9,7 @@ void main() async {
   var info = await PackageInfo.fromPlatform();
 
   runApp(MyApp(
-    versionTracking: VersionTracking.from(preferences: preferences, info: info),
+    versionTracking: VersionTracking.from(sharedPreferences: preferences, packageInfo: info),
   ));
 } 
 
